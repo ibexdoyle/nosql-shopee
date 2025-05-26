@@ -72,3 +72,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 --Package--
 npm install --save-dev ajv@^7
 npm install -D tailwindcss@3
+npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
+npm install framer-motion
+npm install react-slick slick-carousel
+npm install react-router-dom

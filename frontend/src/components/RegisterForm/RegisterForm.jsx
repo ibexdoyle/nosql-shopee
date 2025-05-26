@@ -1,0 +1,61 @@
+import React, { useState } from 'react';
+import { TextField, Button } from '@mui/material';
+import { register } from '../../services/AuthService';
+import { useNavigate } from 'react-router-dom';
+
+const RegisterForm = () => {
+  const [fullName, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleRegister = async (e) => {
+        e.preventDefault();
+        try {
+            const userData = await register(fullName, phone, email, password);
+            alert('Đăng ký thành công');
+            console.log(userData);
+        } catch (err) {
+            alert(err.message);
+        }
+    };
+
+  return (
+    <form onSubmit={handleRegister} className="space-y-4 mt-4">
+      <TextField
+        fullWidth
+        label="Tên đầy đủ"
+        variant="outlined"
+        value={fullName}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        fullWidth
+        label="Số điện thoại"
+        variant="outlined"
+        value={phone}
+        onChange={(e) => setName(e.target.value)}
+      />
+      <TextField
+        fullWidth
+        label="Email"
+        variant="outlined"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <TextField
+        fullWidth
+        type="password"
+        label="Mật khẩu"
+        variant="outlined"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Button type="submit" fullWidth variant="contained" sx={{color: "white", backgroundColor: "#0A3C30"}}>
+        Đăng ký
+      </Button>
+    </form>
+  );
+};
+
+export default RegisterForm;
