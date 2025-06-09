@@ -11,7 +11,6 @@ const LoginForm = () =>{
         e.preventDefault();
         try{
             const userData = await login(email, password);
-            alert('Đăng nhập thành công');
             navigate("/");
         }
         catch(err){
@@ -26,6 +25,16 @@ const LoginForm = () =>{
                 variant="outlined"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                sx={{
+                    '& label.Mui-focused': {
+                        color: '#0A3C30',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                            borderColor: '#0A3C30',
+                        },
+                    },
+                }}
             />
             <TextField
                 fullWidth
@@ -34,8 +43,18 @@ const LoginForm = () =>{
                 variant="outlined"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                sx={{
+                    '& label.Mui-focused': {
+                        color: '#0A3C30',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                        '&.Mui-focused fieldset': {
+                            borderColor: '#0A3C30',
+                        },
+                    },
+                }}
             />
-            <Button type="submit" fullWidth variant="contained" className="bg-blue-500 hover:bg-blue-600 text-white">
+            <Button type="submit" fullWidth variant="contained" sx={{color: "white", backgroundColor: "#0A3C30"}}>
                 Đăng nhập
             </Button>
         </form>

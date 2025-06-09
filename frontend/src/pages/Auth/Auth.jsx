@@ -11,14 +11,19 @@ const [tab, setTab] = useState(0);
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-[#f5f5f5]">
-      <Card className="w-full max-w-md shadow-xl rounded-2xl p-4 bg-[#0A3C30]">
+    <div className="flex items-center justify-center min-h-screen">
+      <Card className="w-full max-w-md shadow-xl rounded-2xl p-4">
         <CardContent>
-          <Tabs value={tab} onChange={handleTabChange} centered>
-            <Tab label="Đăng nhập" />
-            <Tab label="Đăng ký" />
+          <Tabs value={tab} onChange={handleTabChange} centered slotProps={{
+            indicator: {
+              sx: {
+                backgroundColor: '#0A3C30', // hoặc bất kỳ màu nào bạn muốn
+              },
+            },
+          }}>
+            <Tab label="Đăng nhập" className="text-[#3EBB9E]"/>
+            <Tab label="Đăng ký" className="text-[#3EBB9E]"/>
           </Tabs>
-
           {tab === 0 ? <LoginForm /> : <RegisterForm />}
         </CardContent>
       </Card>

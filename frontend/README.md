@@ -76,3 +76,4 @@ npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
 npm install framer-motion
 npm install react-slick slick-carousel
 npm install react-router-dom
+npm i @flaticon/flaticon-uicons

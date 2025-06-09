@@ -1,7 +1,10 @@
+@import "@flaticon/flaticon-uicons/css/all/all";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 @import './assets/fonts/fonts.css';
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Inter' ,'Segoe UI', 'Roboto', 'Oxygen',

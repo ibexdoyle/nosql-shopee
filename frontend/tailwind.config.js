@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{js,jsx,ts,tsx}",
   ],
+  important: "#root",
   theme: {
       colors: {
           'white': '#FFFFFF',
@@ -16,7 +17,8 @@ module.exports = {
           'navy': '#002160',
           'dark-cyan': '#008B8B',
           'smoke': '#848884',
-          'emerald-green': '#0A3C30'
+          'emerald-green': '#0A3C30',
+          'mint': '#3EBB9E'
       },
 
     fontSize: {
