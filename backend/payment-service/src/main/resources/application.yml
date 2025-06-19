@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: payment-service
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: payment-service
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: '*'
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+
+
+
+  cassandra:
+    contact-points: localhost
+    local-datacenter: datacenter1
+    keyspace-name: payment_keyspace
+    schema-action: none
+    port: 9042
+
+server:
+  port: 8083                         # ho?c c?ng kh�c n?u c?n
+
+cassandra:
+  migration:
+    keyspace-name: payment_keyspace
+    script-locations: classpath:cassandra/migration
+    consistency-level: QUORUM
+    strategy: FAIL_ON_DUPLICATES
+
+
