@@ -12,6 +12,7 @@ const LoginForm = () =>{
         try{
             const userData = await login(email, password);
             navigate("/");
+            window.location.reload();
         }
         catch(err){
             alert(err.message);

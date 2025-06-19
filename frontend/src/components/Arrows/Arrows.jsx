@@ -19,13 +19,13 @@ const arrowStyle = {
 };
 
 export const NextArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ ...arrowStyle, right: -16 }}>
+  <IconButton onClick={onClick} sx={{ ...arrowStyle, right: -16 }} className="opacity-0 group-hover:opacity-100 transition-opacity">
     <ArrowForwardIos fontSize="small" />
   </IconButton>
 );
 
 export const PrevArrow = ({ onClick }) => (
-  <IconButton onClick={onClick} sx={{ ...arrowStyle, left: -16 }}>
+  <IconButton onClick={onClick} sx={{ ...arrowStyle, left: -16 }} className="opacity-0 group-hover:opacity-100 transition-opacity">
     <ArrowBackIos fontSize="small" />
   </IconButton>
 );

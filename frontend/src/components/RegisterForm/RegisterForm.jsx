@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
 import { register } from '../../services/AuthService';
-import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [fullName, setName] = useState('');

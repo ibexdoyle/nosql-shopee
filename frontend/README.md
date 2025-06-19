@@ -77,3 +77,4 @@ npm install framer-motion
 npm install react-slick slick-carousel
 npm install react-router-dom
 npm i @flaticon/flaticon-uicons
+npm install react-toastify

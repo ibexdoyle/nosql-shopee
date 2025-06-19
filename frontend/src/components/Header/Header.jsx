@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import {AppBar, Toolbar, IconButton, InputBase, Box, Badge, Menu, Avatar} from '@mui/material'
+import {AppBar, Toolbar, IconButton, InputBase, Box, Badge, Menu, Avatar, MenuItem} from '@mui/material'
 import {Notifications, Search, ShoppingCart} from '@mui/icons-material'
 import Logo from '../../assets/image/logo-horizontal.png'
 import { useUser } from '../../context/UserContext';
+import { useCart } from '../../context/CartContext';
 
 const Header = () =>{
     const quickLinks = [ "Máy Quạt Cầm Tay", "Áo Kiểu Babydoll", "Dép Nữ Màu Đen",
@@ -11,6 +12,7 @@ const Header = () =>{
     const [keyword, setKeyword] = useState('');
     const navigate = useNavigate();
     const {user, logout} = useUser();
+    const { cartItems } = useCart();
 
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
@@ -30,9 +32,11 @@ const Header = () =>{
 
     const isHomepage = useLocation().pathname === '/';
 
+    const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+
     return(
         <AppBar position={isHomepage ? 'sticky' : 'static'} sx={{ background: 'linear-gradient(to bottom, #00674F, #0A3C30)', boxShadow: 'none' }}>
-            <div className="max-w-[1200px] mx-auto w-full">
+            <div className="max-w-6xl mx-auto w-full">
                 <Toolbar className="flex justify-between text-sm text-white !min-h-[48px] !p-0">
                     <div className="flex items-center gap-2">
                         <a href="#" className="text-white no-underline hover:underline">Kênh người bán</a>
@@ -45,13 +49,45 @@ const Header = () =>{
                             <span className="text-white text-sm ml-1">Thông báo</span>
                         </IconButton>
                         {user ? (
-                            <div onMouseEnter={handleMenuOpen} onMouseLeave={handleMenuClose} className="relative flex items-center">
-                                <IconButton>
-                                    <Avatar src={user.avatar}/>
+                            <div onMouseEnter={handleMenuOpen} onMouseLeave={handleMenuClose} className="flex items-center">
+                                <Link to={"/profile"} className='flex items-center gap-1'>
+                                    <Avatar src={user.avatar} className='h-6 w-6'/>
                                     <span>{user.username}</span>
-                                </IconButton>
-                                <Menu>
-
+                                </Link>
+                                <Menu
+                                    anchorEl={anchorEl}
+                                    open={open}
+                                    onClose={() => setAnchorEl(null)}
+                                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                                    disableAutoFocusItem
+                                >
+                                    <MenuItem
+                                    autoFocus={false}
+                                    sx={{
+                                        backgroundColor: 'white'
+                                    }}
+                                    onClick={() => {
+                                        navigate('/profile');
+                                        setAnchorEl(null);
+                                    }}
+                                    >
+                                        Tài khoản của tôi
+                                    </MenuItem>
+                                    <MenuItem
+                                    autoFocus={false}
+                                    sx={{
+                                        '&:hover': {
+                                        backgroundColor: 'transparent',
+                                        },
+                                    }}
+                                    onClick={() => {
+                                        handleLogout();
+                                        setAnchorEl(null);
+                                    }}
+                                    >
+                                        Đăng Xuất
+                                    </MenuItem>
                                 </Menu>
                             </div>
                         ):(
@@ -95,11 +131,11 @@ const Header = () =>{
                             ))}
                             </Box>
                     </div>
-                    <IconButton>
-                        <Badge>
+                    <Link to={"/cart"} className='mr-5'>
+                        <Badge badgeContent={cartCount} color="secondary">
                             <ShoppingCart sx={{ color: 'white' }} />
                         </Badge>
-                    </IconButton>
+                    </Link>
                 </Toolbar>
             </div>
         </AppBar>

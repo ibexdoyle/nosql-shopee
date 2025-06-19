@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Typography, Card, CardContent, Tabs, Tab } from '@mui/material';
+import { Card, CardContent, Tabs, Tab } from '@mui/material';
 import LoginForm from '../../components/LoginForm/LoginForm';
 import RegisterForm from '../../components/RegisterForm/RegisterForm'
 
@@ -17,7 +17,7 @@ const [tab, setTab] = useState(0);
           <Tabs value={tab} onChange={handleTabChange} centered slotProps={{
             indicator: {
               sx: {
-                backgroundColor: '#0A3C30', // hoặc bất kỳ màu nào bạn muốn
+                backgroundColor: '#0A3C30',
               },
             },
           }}>

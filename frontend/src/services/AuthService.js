@@ -15,9 +15,36 @@ export const login = async(email, password) => {
         const data = {
         token: 'fake-jwt-token',
         user: {
+            id: 1,
             username: 'Dũng Lê',
             email: 'dora@example.com',
+            gender: 'Nam',
+            dob: '10/12/2003',
+            phone: '01122334455',
             avatar: '../assets/image/user.jpg',
+            balance: 1200000,
+            addresses: [
+              {
+                  id: 1,
+                  name: 'Lê Phan Xuân Dũng',
+                  phone: '0384340684',
+                  detail: 'Số 38, Đường 39, Khu dân cư Vạn Phúc',
+                  ward: 'Phường Hiệp Bình Phước',
+                  district: 'Thành Phố Thủ Đức',
+                  city: 'TP. Hồ Chí Minh',
+                  isDefault: true,
+              },
+              {
+                  id: 2,
+                  name: 'Lê Phan Xuân',
+                  phone: '0384340684',
+                  detail: 'Số 40, Đường 39, Khu dân cư Vạn Phúc',
+                  ward: 'Phường Hiệp Bình Phước',
+                  district: 'Thành Phố Thủ Đức',
+                  city: 'TP. Hồ Chí Minh',
+                  isDefault: false,
+              },
+            ]
         },
         };
         localStorage.setItem('token', data.token);

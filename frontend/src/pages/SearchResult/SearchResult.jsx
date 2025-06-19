@@ -20,7 +20,7 @@ const SearchResult = () =>{
     return(
         <div className="container">
             <Header/>
-            <div className="max-w-7xl mx-auto p-4">
+            <div className="max-w-6xl mx-auto mt-3">
                 <h2 className="text-lg font-semibold mb-4">
                     Kết quả tìm kiếm cho: '<span className="text-mint">{query}</span>'
                 </h2>

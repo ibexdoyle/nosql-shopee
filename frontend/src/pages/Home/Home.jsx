@@ -72,7 +72,7 @@ const Home = () =>{
             <Header/>
 
             <div className="bg-white py-3">
-                <div className="max-w-[1200px] mx-auto banner-section flex flex-col md:flex-row gap-4">
+                <div className="max-w-6xl mx-auto mt-3 banner-section flex flex-col md:flex-row gap-4">
                     <div className="main-banner md:w-2/3">
                         <img src={Banner} alt="banner" className="rounded-sm"/>
                     </div>
