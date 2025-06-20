@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import {AppBar, Toolbar, IconButton, InputBase, Box, Badge, Menu, Avatar, MenuItem} from '@mui/material'
 import {Notifications, Search, ShoppingCart} from '@mui/icons-material'
 import Logo from '../../assets/image/logo-horizontal.png'
 import { useUser } from '../../context/UserContext';
 import { useCart } from '../../context/CartContext';
+import { getSellerByUserId } from "../../services/ShopService";
 
 const Header = () =>{
     const quickLinks = [ "Máy Quạt Cầm Tay", "Áo Kiểu Babydoll", "Dép Nữ Màu Đen",
     "Ốp iPhone Xinh Cute","Quần Dsquared2 Nam Size 24", "Đồ ăn vặt", "Áo hoodie"];
+    const [isSeller, setIsSeller] = useState(false);
     const [keyword, setKeyword] = useState('');
     const navigate = useNavigate();
     const {user, logout} = useUser();
@@ -29,6 +31,15 @@ const Header = () =>{
             navigate(`/search?query=${encodeURIComponent(keyword.trim())}`);
         }
     };
+    useEffect(() => {
+        if (user) {
+            const seller = getSellerByUserId(user.id);
+            setIsSeller(!!seller);
+        } else {
+            setIsSeller(false);
+        }
+    }, [user]);
+
 
     const isHomepage = useLocation().pathname === '/';
 
@@ -39,9 +50,19 @@ const Header = () =>{
             <div className="max-w-6xl mx-auto w-full">
                 <Toolbar className="flex justify-between text-sm text-white !min-h-[48px] !p-0">
                     <div className="flex items-center gap-2">
-                        <a href="#" className="text-white no-underline hover:underline">Kênh người bán</a>
-                        <span>|</span>
-                        <a href="#" className="hover:underline">Trở thành người bán</a>
+                        {user && (
+                        <>
+                            {isSeller ? (
+                            <Link to="/seller" className="text-white hover:underline">
+                                Kênh người bán
+                            </Link>
+                            ) : (
+                            <Link to="/become-seller" className="text-white hover:underline">
+                                Trở thành người bán
+                            </Link>
+                            )}
+                        </>
+                        )}
                     </div>
                     <div className="flex items-center gap-2">
                         <IconButton size="small" sx={{'&:hover': {backgroundColor: 'transparent', },color: 'white', }}>

@@ -11,7 +11,7 @@ function useQuery() {
 const SearchResult = () =>{
     const query = useQuery().get('query')?.toLowerCase() || '';
 
-    const products = mockProducts; 
+    const products = mockProducts; // 
 
     const filteredProducts = products.filter(product =>
         product.name.toLowerCase().includes(query)

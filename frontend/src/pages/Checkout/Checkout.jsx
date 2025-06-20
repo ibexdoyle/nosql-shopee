@@ -3,11 +3,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import { useUser } from "../../context/UserContext";
 import FormatNumber from "../../utils/FormatNumber";
+import { useCart } from "../../context/CartContext";
 import { toast } from 'react-toastify';
 
 const Checkout = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { removeItemsFromCart } = useCart();
   const { user, setUser } = useUser();
 
   const products = state?.products || [];
@@ -30,10 +32,9 @@ const Checkout = () => {
     0
   );
   const totalPayment = totalProductPrice + shippingFee;
-
   const handlePlaceOrder = () => {
-    if (user.balance < totalPayment) {
-      alert("⚠️ Số dư không đủ để thanh toán!");
+    if (!user || user.balance < totalPayment) {
+      toast.error("⚠️ Số dư không đủ để thanh toán!");
       return;
     }
 
@@ -44,9 +45,13 @@ const Checkout = () => {
 
     setUser(updatedUser);
     localStorage.setItem("user", JSON.stringify(updatedUser));
-    alert("✅ Đặt hàng thành công!");
 
-    navigate("/");
+    removeItemsFromCart(products.map((p) => p.id));
+
+    setTimeout(() => {
+      toast.success("Đặt hàng thành công!");
+      navigate("/");
+    }, 100);
   };
 
   return (

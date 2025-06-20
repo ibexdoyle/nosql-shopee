@@ -52,11 +52,18 @@ export const CartProvider = ({ children }) => {
     const removeFromCart = (productId) => {
       setCartItems((prev) => prev.filter(item => item.id !== productId));
     };
+    const removeItemsFromCart = (productIds) => {
+      setCartItems((prev) => {
+        const updated = prev.filter(item => !productIds.includes(item.productId || item.id));
+        localStorage.setItem(storageKey, JSON.stringify(updated));
+        return updated;
+      });
+    };
 
   const clearCart = () => setCartItems([]);
 
   return (
-    <CartContext.Provider value={{ cartItems, addToCart, clearCart, updateQuantity, removeFromCart }}>
+    <CartContext.Provider value={{ cartItems, addToCart, clearCart, updateQuantity, removeFromCart, removeItemsFromCart }}>
       {children}
     </CartContext.Provider>
   );

@@ -91,7 +91,7 @@ const AddressSelector = ({ onSelect, resetSignal }) => {
             <button
               type="button"
               onClick={handleClear}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-black"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-smoke hover:text-black"
             >
               ×
             </button>
