@@ -1,0 +1,24 @@
+
+spring:
+  application:
+    name: order-service
+  cassandra:
+    contact-points: localhost
+    port: 9042
+    keyspace-name: order_keyspace
+    local-datacenter: datacenter1
+    schema-action: none
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: order-service
+      properties:
+        spring.json.trusted.packages: '*'
+cassandra:
+  migration:
+    keyspace-name: order_keyspace
+    script-locations: classpath:cassandra/migration
+    strategy: FAIL_ON_DUPLICATES
+    consistency-level: QUORUM
+
