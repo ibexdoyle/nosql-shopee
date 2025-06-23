@@ -1,4 +1,4 @@
-package com.example.search_service.event;
+package com.example.search_service.event.produce;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

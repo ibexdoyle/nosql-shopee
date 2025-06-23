@@ -16,4 +16,20 @@ import java.util.UUID;
 public class StockConfirmedEvent {
     private UUID orderId;
     private List<OrderItem> items;
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(UUID orderId) {
+        this.orderId = orderId;
+    }
+
+    public List<OrderItem> getItems() {
+        return items;
+    }
+
+    public void setItems(List<OrderItem> items) {
+        this.items = items;
+    }
 }

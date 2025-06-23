@@ -1,5 +1,7 @@
 package com.example.product_service.model;
 
+
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,4 +16,5 @@ import java.util.UUID;
 public class OrderItem {
     private String productId;
     private int quantity;
+
 }

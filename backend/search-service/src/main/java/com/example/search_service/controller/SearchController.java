@@ -4,15 +4,12 @@ import com.example.search_service.model.ProductDocument;
 import com.example.search_service.service.SearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/search")
+@RequestMapping("/api/searchs")
 @RequiredArgsConstructor
 public class SearchController {
 
@@ -22,5 +19,11 @@ public class SearchController {
     public ResponseEntity<List<ProductDocument>> search(@RequestParam String keyword) {
         return ResponseEntity.ok(searchService.searchByName(keyword));
     }
+
+    @PostMapping("/index")
+    public ProductDocument indexProduct(@RequestBody ProductDocument product) {
+        return searchService.index(product);
+    }
+
 }
 

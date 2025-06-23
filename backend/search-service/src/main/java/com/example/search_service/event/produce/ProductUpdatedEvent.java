@@ -1,4 +1,4 @@
-package com.example.search_service.event;
+package com.example.search_service.event.produce;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,6 +17,8 @@ public class ProductUpdatedEvent {
     private String name;
     private String description;
     private BigDecimal price;
-    private String shopId;
     private int stock;
+    private String shopId;
+    private List<String> images;
+    private String category;
 }

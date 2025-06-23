@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface SearchService {
     List<ProductDocument> searchByName(String keyword);
-    void index(ProductDocument product);
+    ProductDocument index(ProductDocument product);
     void delete(String productId);
 }

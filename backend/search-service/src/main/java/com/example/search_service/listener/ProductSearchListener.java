@@ -1,8 +1,8 @@
 package com.example.search_service.listener;
 
-import com.example.search_service.event.ProductCreatedEvent;
-import com.example.search_service.event.ProductDeletedEvent;
-import com.example.search_service.event.ProductUpdatedEvent;
+import com.example.search_service.event.produce.ProductCreatedEvent;
+import com.example.search_service.event.produce.ProductDeletedEvent;
+import com.example.search_service.event.produce.ProductUpdatedEvent;
 import com.example.search_service.model.ProductDocument;
 import com.example.search_service.service.SearchService;
 import lombok.RequiredArgsConstructor;

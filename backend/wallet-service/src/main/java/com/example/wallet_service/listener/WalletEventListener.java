@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -24,9 +25,10 @@ public class WalletEventListener {
     public void onBalanceCheck(BalanceCheckEvent event) {
         log.info("Received BalanceCheckEvent for user {}", event.getUserId());
 
-        Wallet wallet = walletRepository.findByUserId(event.getUserId());
+        Optional<Wallet> walletOptional = walletRepository.findByUserId(event.getUserId());
 
-        if (wallet != null && wallet.getBalance().compareTo(event.getAmount()) >= 0) {
+        if (walletOptional.isPresent() && walletOptional.get().getBalance().compareTo(event.getAmount()) >= 0) {
+            Wallet wallet = walletOptional.get();
             // Trừ tiền
             wallet.setBalance(wallet.getBalance().subtract(event.getAmount()));
             walletRepository.save(wallet);
@@ -42,8 +44,10 @@ public class WalletEventListener {
     public void onWalletRefund(WalletRefundEvent event) {
         log.warn("Received WalletRefundEvent for order {}, user {}", event.getOrderId(), event.getUserId());
 
-        Wallet wallet = walletRepository.findByUserId(event.getUserId());
-        if (wallet != null) {
+        Optional<Wallet> walletOptional = walletRepository.findByUserId(event.getUserId());
+
+        if (walletOptional.isPresent() ) {
+            Wallet wallet = walletOptional.get();
             wallet.setBalance(wallet.getBalance().add(event.getAmount()));
             walletRepository.save(wallet);
             log.info("Refunded {} to user {}", event.getAmount(), event.getUserId());

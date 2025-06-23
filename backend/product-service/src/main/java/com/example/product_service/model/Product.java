@@ -24,4 +24,5 @@ public class Product {
     private String shopId;
     private List<String> images;
     private String category;
+    
 }

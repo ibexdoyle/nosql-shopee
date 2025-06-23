@@ -20,12 +20,14 @@ public class SearchServiceImpl implements SearchService {
     }
 
     @Override
-    public void index(ProductDocument product) {
+    public ProductDocument index(ProductDocument product) {
         repository.save(product);
+        return product;
     }
 
     @Override
     public void delete(String productId) {
+
         repository.deleteById(productId);
     }
 }

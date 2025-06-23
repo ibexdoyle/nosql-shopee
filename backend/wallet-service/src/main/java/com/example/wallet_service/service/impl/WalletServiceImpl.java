@@ -16,16 +16,16 @@ public class WalletServiceImpl implements WalletService {
     private final WalletRepository walletRepository;
 
     @Override
-    public void deposit(UUID ownerId, BigDecimal amount) {
-        Wallet wallet = walletRepository.findByOwnerId(ownerId)
-                .orElse(Wallet.builder().id(UUID.randomUUID()).ownerId(ownerId).balance(BigDecimal.ZERO).build());
+    public void deposit(UUID userId, BigDecimal amount) {
+        Wallet wallet = walletRepository.findByUserId(userId)
+                .orElse(Wallet.builder().id(UUID.randomUUID()).userId(userId).balance(BigDecimal.ZERO).build());
         wallet.setBalance(wallet.getBalance().add(amount));
         walletRepository.save(wallet);
     }
 
     @Override
-    public boolean withdraw(UUID ownerId, BigDecimal amount) {
-        Wallet wallet = walletRepository.findByOwnerId(ownerId).orElse(null);
+    public boolean withdraw(UUID userId, BigDecimal amount) {
+        Wallet wallet = walletRepository.findByUserId(userId).orElse(null);
         if (wallet == null || wallet.getBalance().compareTo(amount) < 0) {
             return false;
         }
@@ -35,15 +35,36 @@ public class WalletServiceImpl implements WalletService {
     }
 
     @Override
-    public void refund(UUID ownerId, BigDecimal amount) {
-        deposit(ownerId, amount);
+    public void refund(UUID userId, BigDecimal amount) {
+        deposit(userId, amount);
     }
 
     @Override
-    public BigDecimal getBalance(UUID ownerId) {
-        return walletRepository.findByOwnerId(ownerId)
+    public BigDecimal getBalance(UUID userId) {
+        return walletRepository.findByUserId(userId)
                 .map(Wallet::getBalance)
                 .orElse(BigDecimal.ZERO);
+    }
+
+
+    @Override
+    public Wallet findByUserId(UUID userId) {
+        return walletRepository.findByUserId(userId).orElse(null);
+    }
+
+    @Override
+    public Wallet createWallet(Wallet wallet) {
+        wallet.setId(UUID.randomUUID());
+        if (wallet.getBalance() == null) {
+            wallet.setBalance(BigDecimal.ZERO);
+        }
+        return walletRepository.save(wallet);
+    }
+
+    @Override
+    public void deleteWallet(UUID userId) {
+        walletRepository.findByUserId(userId)
+                .ifPresent(walletRepository::delete);
     }
 }
 

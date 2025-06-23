@@ -5,6 +5,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Document(indexName = "products")
 @Data
@@ -17,6 +18,8 @@ public class ProductDocument {
     private String name;
     private String description;
     private BigDecimal price;
-    private String shopId;
     private int stock;
+    private String shopId;
+    private List<String> images;
+    private String category;
 }
