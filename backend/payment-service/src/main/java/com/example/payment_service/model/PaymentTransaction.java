@@ -14,11 +14,25 @@ import java.util.UUID;
 @Builder
 public class PaymentTransaction {
     @PrimaryKey
+    @Column("transaction_id")
     private UUID transactionId;
+
+    @Column("order_id")
     private UUID orderId;
+
+    @Column("user_id")
     private UUID userId;
+
+    @Column("amount")
     private BigDecimal amount;
+
+    @Column("status")
     private String status;
+
+    @Column("payment_method")
     private String paymentMethod;
+
+    
+    @Column("created_at")
     private Instant createdAt;
 }

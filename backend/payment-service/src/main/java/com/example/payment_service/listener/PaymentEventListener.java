@@ -16,7 +16,7 @@ public class PaymentEventListener {
 
     @KafkaListener(topics = "order-created-topic", groupId = "payment-service")
     public void onOrderCreated(OrderCreatedEvent event) {
-        log.info("[Kafka] Received OrderCreatedEvent for order {}", event.getOrderId());
+        log.info("[Kafkaaaaaaaaaa] Received OrderCreatedEvent for order {}", event.getOrderId());
         paymentService.handleOrderCreated(event);
     }
 

@@ -33,9 +33,18 @@ public class Order {
     @PrimaryKey
     private Key key;
 
+    @Column("order_id")
     private UUID orderId;
+
+    @Column("shop_id")
     private UUID shopId;
+
+    @Column("status")
     private String status;
+
+    @Column("total")
     private BigDecimal total;
-    private List<OrderItem> items; // product item
+
+    @Column("items")
+    private List<String> items; // product item
 }

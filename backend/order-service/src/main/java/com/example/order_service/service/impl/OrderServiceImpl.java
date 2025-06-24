@@ -11,6 +11,9 @@ import com.example.order_service.producer.OrderProducer;
 import com.example.order_service.producer.RollbackProducer;
 import com.example.order_service.repository.OrderRepository;
 import com.example.order_service.service.OrderService;
+import com.example.order_service.util.OrderItemDeserializer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,10 +35,25 @@ public class OrderServiceImpl implements OrderService {
     private final Map<UUID, Boolean> stockStatus = new ConcurrentHashMap<>();
     private final Map<UUID, Boolean> paymentStatus = new ConcurrentHashMap<>();
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
     @Override
     public Order createOrder(OrderRequest request) {
         UUID orderId = UUID.randomUUID();
         Instant createdAt = Instant.now();
+
+
+        List<String> itemStrings = request.getItems().stream()
+                .map(item->{
+                    try{
+                        return objectMapper.writeValueAsString(item);
+                    }
+                    catch(JsonProcessingException e){
+                        throw new RuntimeException("Cannot serialize OrderItem", e);
+                    }
+                })
+                .collect(Collectors.toList());
+
 
         Order order = Order.builder()
                 .key(new Order.Key(request.getUserId(), createdAt))
@@ -42,7 +61,7 @@ public class OrderServiceImpl implements OrderService {
                 .shopId(request.getShopId())
                 .status(OrderStatus.PENDING.name())
                 .total(request.getTotal())
-                .items(request.getItems())
+                .items(itemStrings)
                 .build();
 
         orderRepository.save(order);
@@ -107,9 +126,20 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void rollbackProduct(Order order) {
+//        List<String> itemJsonList = order.getItems().stream()
+//                        .map(item ->{
+//                            try{
+//                                return objectMapper.writeValueAsString(item);
+//                            } catch(Exception e){
+//                                throw new RuntimeException("Failed to serialize OrderItem", e);
+//                            }
+//                        })
+//                                .collect(Collectors.toList());
+//
+
         rollbackProducer.sendRollbackToProduct(ProductRollbackEvent.builder()
                 .orderId(order.getOrderId())
-                .items(order.getItems())
+                .items(OrderItemDeserializer.deserializeItems(order.getItems()))
 //                .reason("Payment failed after stock confirmed")
                 .build());
     }

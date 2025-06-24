@@ -19,25 +19,13 @@ spring:
 #    keyspace-name: order_keyspace
 #    local-datacenter: datacenter1
 #    schema-action: none
-  data:
-    cassandra:
-      contact-points: localhost
-      port: 9042
-      local-datacenter: datacenter1
-      schema-action: none
-      keyspace-name: order_keyspace
-
-# Cassandra Migration cấu hình
-cassandra:
-  migration:
-    keyspace-name: order_keyspace
-    contact-points: localhost
+  cassandra:
+    contact-points:
+      - 127.0.0.1
     port: 9042
     local-datacenter: datacenter1
-    base-package: com.example.order_service
-
-
-
+    keyspace-name: order_keyspace
+    schema-action: none
 
   kafka:
     #CONFIGGG
@@ -58,7 +46,7 @@ cassandra:
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
       properties:
-        spring.json.trusted.packages: com.example.order_service.event.produce
+        spring.json.trusted.packages: com.example.order_service.event
 
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -69,7 +57,14 @@ cassandra:
 
 
 
-
+# Cassandra Migration cấu hình
+cassandra:
+  migration:
+    keyspace-name: order_keyspace
+    contact-points: localhost
+    port: 9042
+    local-datacenter: datacenter1
+    base-package: com.example.order_service
 
 #cassandra:
 #  migration:

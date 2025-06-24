@@ -29,6 +29,8 @@ public class PaymentLog {
     @PrimaryKey
     private Key key;
 
+    @Column("message")
     private String message;
+    @Column("created_at")
     private Instant createdAt;
 }

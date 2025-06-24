@@ -12,9 +12,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Slf4j
 public class OrderProducer {
-    private final KafkaTemplate<String, OrderCreatedEvent> kafkaTemplate;
+    private final KafkaTemplate<String, Object> kafkaTemplate;
 
     public void publishOrderCreated(OrderCreatedEvent event) {
+        log.info("Publishing OrderCreatedEvent for order {}", event.getOrderId());
         kafkaTemplate.send("order-created-topic", event);
     }
 
