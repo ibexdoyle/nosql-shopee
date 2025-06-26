@@ -12,30 +12,24 @@ const SellerDashboard = () => {
       <div className="flex max-w-7xl mx-auto mt-6 bg-white rounded shadow min-h-[500px]">
         {/* Sidebar */}
         <div className="w-64 border-r p-4 bg-gray-50">
-          <h2 className="text-lg font-semibold mb-4">📋 Menu quản lý</h2>
+          <h2 className="text-lg font-semibold mb-4">Quản lý</h2>
           <ul className="space-y-2">
             <li>
-              <button
-                onClick={() => setActiveTab("orders")}
-                className={`w-full text-left px-3 py-2 rounded ${
+              <button onClick={() => setActiveTab("orders")} className={`w-full text-left px-3 py-2 rounded ${
                   activeTab === "orders"
                     ? "bg-emerald-100 text-emerald-700 font-semibold"
                     : "hover:bg-gray-100"
-                }`}
-              >
-                🧾 Quản lý đơn hàng
+                }`}>
+                Quản lý đơn hàng
               </button>
             </li>
             <li>
-              <button
-                onClick={() => setActiveTab("products")}
-                className={`w-full text-left px-3 py-2 rounded ${
+              <button onClick={() => setActiveTab("products")} className={`w-full text-left px-3 py-2 rounded ${
                   activeTab === "products"
                     ? "bg-emerald-100 text-emerald-700 font-semibold"
                     : "hover:bg-gray-100"
-                }`}
-              >
-                📦 Quản lý sản phẩm
+                }`}>
+                Quản lý sản phẩm
               </button>
             </li>
           </ul>

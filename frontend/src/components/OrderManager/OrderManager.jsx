@@ -1,9 +1,9 @@
 import React, { useState } from "react";
+import Pagination from "../Pagination/Pagination";
 
 const dummyOrders = [
   {
     id: 59217,
-    number: "59217342",
     status: "New order",
     itemCount: 1,
     customer: "Cody Fisher",
@@ -12,7 +12,6 @@ const dummyOrders = [
   },
   {
     id: 59213,
-    number: "59217343",
     status: "Cancelled",
     itemCount: 2,
     customer: "Kristin Watson",
@@ -21,7 +20,30 @@ const dummyOrders = [
   },
   {
     id: 59219,
-    number: "59217344",
+    status: "Shipped",
+    itemCount: 12,
+    customer: "Esther Howard",
+    shipping: "Express",
+    tracking: "940010010936113003113",
+  },
+  {
+    id: 59210,
+    status: "Shipped",
+    itemCount: 12,
+    customer: "Esther Howard",
+    shipping: "Express",
+    tracking: "940010010936113003113",
+  },
+  {
+    id: 59211,
+    status: "Shipped",
+    itemCount: 12,
+    customer: "Esther Howard",
+    shipping: "Express",
+    tracking: "940010010936113003113",
+  },
+  {
+    id: 59222,
     status: "Shipped",
     itemCount: 12,
     customer: "Esther Howard",
@@ -44,16 +66,23 @@ const shippingColors = {
 };
 const OrderManager = () =>{
   const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const pageSize = 5;
 
-  const filteredOrders = dummyOrders.filter(
-    (o) =>
-      o.number.includes(search) ||
-      o.customer.toLowerCase().includes(search.toLowerCase())
+  const filteredOrders = dummyOrders.filter((o) =>
+    o.customer.toLowerCase().includes(search.toLowerCase())
   );
+
+  const paginatedOrders = filteredOrders.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
+
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-6">🧾 Đơn hàng</h2>
+      <h2 className="text-[2rem] font-bold mb-6">Đơn Hàng</h2>
 
       <div className="flex gap-3 mb-4">
         <input
@@ -65,7 +94,6 @@ const OrderManager = () =>{
         />
         <select className="border px-3 py-2 rounded">
           <option>Trạng thái</option>
-          {/* sau này lọc theo trạng thái */}
         </select>
       </div>
 
@@ -73,21 +101,18 @@ const OrderManager = () =>{
         <table className="min-w-full border text-sm">
           <thead className="bg-gray-50 text-left">
             <tr className="border-b">
-              <th className="p-3">ORDER ID</th>
-              <th className="p-3">ORDER NUMBER</th>
-              <th className="p-3">STATUS</th>
-              <th className="p-3">ITEM</th>
-              <th className="p-3">CUSTOMER</th>
-              <th className="p-3">SHIPPING</th>
-              <th className="p-3">TRACKING</th>
-              <th className="p-3 text-right">ACTION</th>
+              <th className="p-3">Mã đơn hàng </th>
+              <th className="p-3">Trạng thái</th>
+              <th className="p-3">Số sản phẩm</th>
+              <th className="p-3">Khách hàng</th>
+              <th className="p-3">Dịch vụ vận chuyển</th>
+              <th className="p-3 text-right">Thao tác</th>
             </tr>
           </thead>
           <tbody>
-            {filteredOrders.map((o) => (
+            {paginatedOrders.map((o) => (
               <tr key={o.id} className="border-b hover:bg-gray-50">
                 <td className="p-3">{o.id}</td>
-                <td className="p-3">{o.number}</td>
                 <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded text-xs font-medium ${
@@ -104,7 +129,6 @@ const OrderManager = () =>{
                     ● {o.shipping}
                   </span>
                 </td>
-                <td className="p-3">{o.tracking}</td>
                 <td className="p-3 text-right">
                   <button title="Edit" className="text-gray-500 hover:text-black">
                     ✏️
@@ -116,17 +140,7 @@ const OrderManager = () =>{
         </table>
       </div>
 
-      {/* Pagination giả */}
-      <div className="flex justify-between items-center text-sm mt-4 text-gray-600">
-        <p>Hiển thị {filteredOrders.length} trong tổng {dummyOrders.length} đơn</p>
-        <div className="flex gap-2">
-          <button className="px-2">‹</button>
-          <button className="px-2 bg-emerald-600 text-white rounded">1</button>
-          <button className="px-2">2</button>
-          <button className="px-2">3</button>
-          <button className="px-2">›</button>
-        </div>
-      </div>
+      <Pagination currentPage={page} totalItems={filteredOrders.length} pageSize={pageSize} onPageChange={(newPage) => setPage(newPage)}/>
     </div>
   );
 }
