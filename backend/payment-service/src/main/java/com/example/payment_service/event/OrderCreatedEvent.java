@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -15,5 +16,13 @@ import java.util.UUID;
 public class OrderCreatedEvent {
     private UUID orderId;
     private UUID userId;
+    private UUID shopId;
     private BigDecimal total;
+    private List<OrderItem> items;
+
+    @Data
+    public static class OrderItem {
+        private UUID productId;
+        private int quantity;
+    }
 }
