@@ -1,4 +1,4 @@
-const PRODUCT_API = "http://localhost:8080/api/products";
+const PRODUCT_API = "http://localhost:8084/api/products";
 
 export const fetchAllProducts = async () => {
   const res = await fetch(PRODUCT_API);

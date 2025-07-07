@@ -49,7 +49,9 @@ public class ProductServiceImpl implements ProductService {
                 .productId(saved.getId())
                 .name(saved.getName())
                 .description(saved.getDescription())
-                .price(saved.getPrice())
+                .originalPrice(saved.getOriginalPrice())
+                .salePrice(saved.getSalePrice())
+                .sold(saved.getSold())
                 .stock(saved.getStock())
                 .shopId(saved.getShopId())
                 .build());
@@ -63,7 +65,9 @@ public class ProductServiceImpl implements ProductService {
         Product product = getProductById(id);
         product.setName(updated.getName());
         product.setDescription(updated.getDescription());
-        product.setPrice(updated.getPrice());
+        product.setOriginalPrice(updated.getOriginalPrice());
+        product.setSalePrice(updated.getSalePrice());
+        product.setSold(updated.getSold());
         product.setStock(updated.getStock());
         product.setImages(updated.getImages());
         product.setCategory(updated.getCategory());
@@ -74,7 +78,8 @@ public class ProductServiceImpl implements ProductService {
                 .productId(saved.getId())
                 .name(saved.getName())
                 .description(saved.getDescription())
-                .price(saved.getPrice())
+                .originalPrice(saved.getOriginalPrice())
+                .salePrice(saved.getSalePrice())
                 .stock(saved.getStock())
                 .shopId(saved.getShopId())
                 .build());

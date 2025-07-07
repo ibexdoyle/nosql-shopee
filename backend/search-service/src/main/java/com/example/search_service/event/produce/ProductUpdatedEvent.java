@@ -16,9 +16,8 @@ public class ProductUpdatedEvent {
     private String productId;
     private String name;
     private String description;
-    private BigDecimal price;
+    private BigDecimal originalPrice;
+    private BigDecimal salePrice;
     private int stock;
     private String shopId;
-    private List<String> images;
-    private String category;
 }

@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+### application properties
+src/main/java/com/example/product_service/resources/*.yml

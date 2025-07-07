@@ -24,7 +24,9 @@ public class ProductSearchListener {
                 .productId(event.getProductId())
                 .name(event.getName())
                 .description(event.getDescription())
-                .price(event.getPrice())
+                .originalPrice(event.getOriginalPrice())
+                .salePrice(event.getSalePrice())
+                .sold(event.getSold())
                 .shopId(event.getShopId())
                 .stock(event.getStock())
                 .build());
@@ -37,7 +39,9 @@ public class ProductSearchListener {
                 .productId(event.getProductId())
                 .name(event.getName())
                 .description(event.getDescription())
-                .price(event.getPrice())
+                .originalPrice(event.getOriginalPrice())
+                .salePrice(event.getSalePrice())
+                .sold(event.getSold())
                 .shopId(event.getShopId())
                 .stock(event.getStock())
                 .build());

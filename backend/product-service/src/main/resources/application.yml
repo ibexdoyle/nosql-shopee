@@ -8,7 +8,7 @@ spring:
           uri: mongodb://localhost:27018/product_db
   kafka:
     #CONFIGGG
-    bootstrap-servers: 10.0.110.5:9092
+    bootstrap-servers: 192.168.241.252:9092
 
 #    consumer:
 #      group-id: product-service

@@ -16,13 +16,13 @@ import java.util.UUID;
 public class Product {
     @Id
     private String id;
-
     private String name;
     private String description;
-    private BigDecimal price;
+    private BigDecimal originalPrice;
+    private BigDecimal salePrice;
+    private BigDecimal sold;
     private int stock;
     private String shopId;
     private List<String> images;
     private String category;
-    
 }
