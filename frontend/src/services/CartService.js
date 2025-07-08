@@ -1,30 +1,40 @@
-const BASE_URL = "http://localhost:8080/api/cart"; 
-
-export const getCart = async (userId) => {
-  const res = await fetch(`${BASE_URL}/${userId}`);
+const CART_API = "http://localhost:8086/api/carts";
+export const fetchCart = async () => {
+  const res = await fetch(CART_API, {
+    credentials: "include",
+  });
   if (!res.ok) throw new Error("Không thể tải giỏ hàng");
-  return await res.json(); // Cart object
-};
-
-export const addItemToCart = async (userId, productId, quantity) => {
-  const res = await fetch(`${BASE_URL}/${userId}/add?productId=${productId}&quantity=${quantity}`, {
-    method: "POST"
-  });
-  if (!res.ok) throw new Error("Thêm sản phẩm thất bại");
   return await res.json();
 };
 
-export const removeItemFromCart = async (userId, productId) => {
-  const res = await fetch(`${BASE_URL}/${userId}/remove?productId=${productId}`, {
-    method: "DELETE"
+
+export const addToCart = async (productId, quantity) => {
+  const res = await fetch(`${CART_API}/add`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ productId, quantity }),
+    credentials: "include"
   });
-  if (!res.ok) throw new Error("Xoá sản phẩm thất bại");
+  console.log(res.body);
+  if (!res.ok) throw new Error("Không thể thêm sản phẩm vào giỏ");
   return await res.json();
 };
 
-export const clearUserCart = async (userId) => {
-  const res = await fetch(`${BASE_URL}/${userId}/clear`, {
-    method: "DELETE"
+export const removeFromCart = async (productId) => {
+  const res = await fetch(`${CART_API}/remove/${productId}`, {
+    method: "DELETE",
+    credentials: "include",
   });
-  if (!res.ok) throw new Error("Xoá giỏ hàng thất bại");
+  if (!res.ok) throw new Error("Không thể xóa sản phẩm");
+  return await res.json();
+};
+
+export const clearCart = async () => {
+  const res = await fetch(`${CART_API}/clear`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+  if (!res.ok) throw new Error("Không thể xóa giỏ hàng");
 };

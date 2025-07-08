@@ -24,10 +24,11 @@ const sliderSettings = {
 const ProductDetail = () =>{
     const sliderRef = useRef(null);
     const {id} = useParams();
-    const { addToCart } = useCart();
+    const { addItem } = useCart();
     const [product, setProduct] = useState(null);
     const [quantity, setQuantity] = useState(1);
     const { user } = useUser();
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
     const [activeImage, setActiveImage] = useState(()=>{
         if (Array.isArray(product?.images) && product.images.length > 0) {
@@ -49,14 +50,20 @@ const ProductDetail = () =>{
         if (quantity > 1) setQuantity((prev) => prev - 1);
     };
 
-    const handleAddToCart = () => {
-        if(!user){
-            navigate("/auth");
+    const handleAddToCart = async () => {
+        if (!user) {
+            navigate("/auth"); 
             return;
         }
-        if (product) {
-            addToCart(product, quantity);
-            toast.success("Đã thêm vào giỏ hàng");
+        try {
+            setLoading(true);
+            await addItem(product.id, quantity); 
+            toast.success("Đã thêm vào giỏ hàng!");
+        } catch (err) {
+            console.error("Thêm vào giỏ hàng lỗi:", err);
+            toast.error("Không thể thêm vào giỏ hàng");
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -130,9 +137,9 @@ const ProductDetail = () =>{
                     </div>
 
                     <div className="flex gap-4 mt-4">
-                            <button className="border border-mint text-mint px-6 py-2 rounded" onClick={handleAddToCart}>
-                                <i class="fi fi-sr-shopping-cart mr-3"></i>Thêm vào giỏ
-                            </button>
+                        <button className="border border-mint text-mint px-6 py-2 rounded" onClick={handleAddToCart}>
+                            <i class="fi fi-sr-shopping-cart mr-3"></i>Thêm vào giỏ
+                        </button>
                             
                         <button className="bg-emerald-green text-white px-6 py-2 rounded">
                             Mua ngay
@@ -143,10 +150,10 @@ const ProductDetail = () =>{
             <div className="max-w-[1200px] mx-auto bg-white p-5 rounded-sm mt-5">
                 <h2 className="text-emerald-green font-bold text-[1.5rem]">MÔ TẢ SẢN PHẨM</h2>
                 <Divider/>
-                <p className="mt-4">{product.description.split('\n').map((line, index) => (
-                        <p key={index}>{line}</p>
+                <div className="mt-4">{product.description.split('\n').map((line, index) => (
+                        <p key={index} className="mb-2">{line}</p>
                     ))}
-                </p>
+                </div>
             </div>      
         </div>
         

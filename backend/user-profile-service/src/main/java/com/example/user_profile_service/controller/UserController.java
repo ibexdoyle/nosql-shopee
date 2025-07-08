@@ -63,7 +63,18 @@ public class UserController {
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        session.setAttribute("USER", user);
+        System.out.println("User logged in with ID: " + user.getId());
+        session.setAttribute("USER_ID", user.getId());
+        return ResponseEntity.ok(user);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<User> getCurrentUser(HttpSession session) {
+        String userId = (String) session.getAttribute("USER_ID");
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        User user = userService.getUserById(UUID.fromString(userId));
         return ResponseEntity.ok(user);
     }
 }
