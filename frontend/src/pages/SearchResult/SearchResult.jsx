@@ -1,43 +1,77 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ProductCard from "../../components/ProductCard/ProductCard";
-import { mockProducts } from "./data/mock_product_card";
 import Header from "../../components/Header/Header";
+import Pagination from "../../components/Pagination/Pagination";
+import { searchProducts } from "../../services/ProductService";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const SearchResult = () =>{
-    const query = useQuery().get('query')?.toLowerCase() || '';
+const SearchResult = () => {
+  const queryParam = useQuery().get("query")?.toLowerCase() || "";
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-    const products = mockProducts; // 
+  const [currentPage, setCurrentPage] = useState(1); // frontend page bắt đầu từ 1
+  const [totalItems, setTotalItems] = useState(0);
+  const pageSize = 8; // Số sản phẩm mỗi trang
 
-    const filteredProducts = products.filter(product =>
-        product.name.toLowerCase().includes(query)
-    );
+  const fetchData = async () => {
+    setLoading(true);
+    try {
+      const data = await searchProducts(
+        queryParam,
+        currentPage - 1, // backend page bắt đầu từ 0
+        pageSize
+      );
+      setProducts(data.content);
+      setTotalItems(data.totalElements);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return(
-        <div className="container">
-            <Header/>
-            <div className="max-w-6xl mx-auto mt-3">
-                <h2 className="text-lg font-semibold mb-4">
-                    Kết quả tìm kiếm cho: '<span className="text-mint">{query}</span>'
-                </h2>
+  useEffect(() => {
+    fetchData();
+  }, [queryParam, currentPage]);
 
-                {filteredProducts.length === 0 ? (
-                    <p>Không tìm thấy sản phẩm nào phù hợp.</p>
-                ) : (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {filteredProducts.map((product, index) => (
-                        <ProductCard key={index} product={product} />
-                    ))}
-                    </div>
-                )}
+  return (
+    <div className="container">
+      <Header />
+      <div className="max-w-6xl mx-auto mt-3">
+        <h2 className="text-lg font-semibold mb-4">
+          Kết quả tìm kiếm cho:{" "}
+          <span className="text-mint">{queryParam}</span>
+        </h2>
+
+        {loading ? (
+          <p>Đang tải sản phẩm...</p>
+        ) : products.length === 0 ? (
+          <p>Không tìm thấy sản phẩm nào phù hợp.</p>
+        ) : (
+          <>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
             </div>
-        </div>
-        
-    )
-}
+
+            {/* ✅ Pagination */}
+            <Pagination
+              currentPage={currentPage}
+              totalItems={totalItems}
+              pageSize={pageSize}
+              onPageChange={setCurrentPage}
+            />
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
 
 export default SearchResult;

@@ -1,6 +1,7 @@
 package com.example.user_profile_service.service.impl;
 
 import com.example.user_profile_service.exception.ResourceNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import com.example.user_profile_service.model.User;
 import com.example.user_profile_service.repository.UserRepository;
 import com.example.user_profile_service.service.UserService;
@@ -45,12 +46,23 @@ public class UserServiceImpl implements UserService {
         user.setEmail(updatedUser.getEmail());
         user.setPhone(updatedUser.getPhone());
         user.setAddress(updatedUser.getAddress());
-        user.setRank(updatedUser.getRank());
+        user.setUserRank(updatedUser.getUserRank());
         return userRepository.save(user);
     }
 
     @Override
     public void deleteUser(UUID id) {
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public User registerUser(User user) {
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email đã được đăng ký");
+        }
+        user.setId(UUID.randomUUID());
+        user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
+        user.setRole("CUSTOMER");
+        return userRepository.save(user);
     }
 }

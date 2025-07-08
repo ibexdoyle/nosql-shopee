@@ -1,4 +1,4 @@
-const API_BASE = ""
+const USER_API = "http://localhost:8082/api/users"
 
 export const login = async(email, password) => {
     // const res = await fetch(`${API_BASE}/login`, {
@@ -55,17 +55,27 @@ export const login = async(email, password) => {
   }
 }
 
-export const register = async(fullName, phone, email, password) =>{
-    const res = await fetch(`${API_BASE}/register`, {
-        method: 'POST',
-        headers: {'Content Type': 'application/json'},
-        body: JSON.stringify(fullName, phone, email, password)
-    });
+export const register = async (username, fullName, phone, email, password) => {
+  const res = await fetch(`${USER_API}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username,
+      name: fullName,
+      phone,
+      email,
+      password,
+    }),
+    credentials: "include",
+  });
+  
+  if (!res.ok) {
+    const errorData = await res.json();
+    throw new Error(errorData.message || "Đăng ký thất bại");
+  }
 
-    const data = await res.json();
-    localStorage.setItem('token', data.token);
-    return data;
-}
+  return res.json();
+};
 
 export const getCurrentUser = () => {
   const user = localStorage.getItem('user');

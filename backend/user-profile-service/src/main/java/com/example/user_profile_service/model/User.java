@@ -28,7 +28,7 @@ public class User {
     private String phone;
     private String address;
     private String role; // "CUSTOMER", "SELLER", "ADMIN"
-    private String rank; // "BRONZE", "SILVER", "GOLD", etc.
+    private String userRank; // "BRONZE", "SILVER", "GOLD", etc.
 
     private UUID shopID;
 
@@ -96,12 +96,12 @@ public class User {
         this.role = role;
     }
 
-    public String getRank() {
-        return rank;
+    public String getUserRank() {
+        return userRank;
     }
 
-    public void setRank(String rank) {
-        this.rank = rank;
+    public void setRank(String userRank) {
+        this.userRank = userRank;
     }
 
     public UUID getShopID() {

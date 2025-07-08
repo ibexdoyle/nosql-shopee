@@ -10,6 +10,7 @@ import com.example.product_service.producer.ProductEventPublisher;
 import com.example.product_service.repository.ProductRepository;
 import com.example.product_service.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -126,5 +127,10 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public Page<Product> searchProducts(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("name").ascending());
+        return productRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
 
 }

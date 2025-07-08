@@ -3,6 +3,7 @@ import { TextField, Button } from '@mui/material';
 import { register } from '../../services/AuthService';
 
 const RegisterForm = () => {
+  const [username, setUsername] = useState(''); 
   const [fullName, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
@@ -11,7 +12,7 @@ const RegisterForm = () => {
   const handleRegister = async (e) => {
         e.preventDefault();
         try {
-            const userData = await register(fullName, phone, email, password);
+            const userData = await register(username, fullName, phone, email, password);
             alert('Đăng ký thành công');
             console.log(userData);
         } catch (err) {
@@ -37,6 +38,17 @@ const RegisterForm = () => {
                   },
               },
          }}
+      />
+      <TextField
+        fullWidth
+        label="Tên đăng nhập"
+        variant="outlined"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        sx={{
+          '& label.Mui-focused': { color: '#0A3C30' },
+          '& .MuiOutlinedInput-root.Mui-focused fieldset': { borderColor: '#0A3C30' },
+        }}
       />
       <TextField
         fullWidth

@@ -8,7 +8,7 @@ const ProductCard = ({product}) =>{
     return(
         <Link to={`/product/${product.id}`} className="no-underline text-inherit">
             <Card>
-                <CardMedia component="img" height="180" image={product.image} alt={product.name} className="object-cover"/>
+                <CardMedia component="img" height="180" image={product.images?.[0] || "/default-image.jpg"} alt={product.name} className="object-cover"/>
 
                 <CardContent className='p-4 flex flex-col gap-1'>
                     <h3 className="line-clamp-2">{product.name}</h3>

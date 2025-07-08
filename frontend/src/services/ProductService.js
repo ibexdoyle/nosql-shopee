@@ -38,3 +38,22 @@ export const deleteProduct = async (id) => {
     method: "DELETE",
   });
 };
+
+export const searchProducts = async (keyword, page = 0, size = 8) => {
+  const url = `${PRODUCT_API}/search?keyword=${encodeURIComponent(
+    keyword
+  )}&page=${page}&size=${size}`;
+
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch products: ${res.status}`);
+  }
+
+  return res.json(); 
+};
