@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -64,5 +65,17 @@ public class UserServiceImpl implements UserService {
         user.setPassword(new BCryptPasswordEncoder().encode(user.getPassword()));
         user.setRole("CUSTOMER");
         return userRepository.save(user);
+    }
+
+    @Override
+    public User validateUser(String email, String rawPassword) {
+        Optional<User> userOpt = userRepository.findByEmail(email);
+        if (userOpt.isPresent()) {
+            User user = userOpt.get();
+            if (new BCryptPasswordEncoder().matches(rawPassword, user.getPassword())) {
+                return user;
+            }
+        }
+        return null;
     }
 }

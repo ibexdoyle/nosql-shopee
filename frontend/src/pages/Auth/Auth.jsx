@@ -12,7 +12,7 @@ const [tab, setTab] = useState(0);
   };
 
   return (
-    <div className="container">
+    <div className="container pt-10">
       <AuthHeader/>
       <div className="flex items-center justify-center min-h-screen">
         <Card className="w-full max-w-md shadow-xl rounded-2xl p-4">

@@ -1,7 +1,9 @@
 package com.example.user_profile_service.controller;
 
+import com.example.user_profile_service.DTO.LoginRequest;
 import com.example.user_profile_service.model.User;
 import com.example.user_profile_service.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,5 +55,15 @@ public class UserController {
     public ResponseEntity<User> registerUser(@RequestBody User user) {
         User createdUser = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+        User user = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        session.setAttribute("USER", user);
+        return ResponseEntity.ok(user);
     }
 }

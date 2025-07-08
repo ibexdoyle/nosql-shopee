@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import { TextField, Button } from '@mui/material';
-import { login } from '../../services/AuthService';
+import { useUser } from '../../context/UserContext';
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
 const LoginForm = () =>{
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const { login } = useUser();
     const navigate = useNavigate();
-    const handleLogin = async (e) =>{
+    const handleLogin = async (e) =>{ 
         e.preventDefault();
-        try{
-            const userData = await login(email, password);
-            navigate("/");
-            window.location.reload();
-        }
-        catch(err){
-            alert(err.message);
+        try {
+            await login(email, password);
+            toast.success('Đăng nhập thành công!');
+            navigate('/');
+        } catch (err) {
+            console.error(err.message);
         }
     }
     return (

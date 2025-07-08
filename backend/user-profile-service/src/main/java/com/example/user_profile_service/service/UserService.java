@@ -13,4 +13,5 @@ public interface UserService {
     User updateUser(UUID id, User user);
     void deleteUser(UUID id);
     User registerUser(User user);
+    User validateUser(String email, String rawPassword);
 }
