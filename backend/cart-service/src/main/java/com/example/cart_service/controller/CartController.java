@@ -2,57 +2,71 @@ package com.example.cart_service.controller;
 
 import com.example.cart_service.dto.CartRequest;
 import com.example.cart_service.dto.CartResponse;
-import com.example.cart_service.model.Cart;
 import com.example.cart_service.model.CartItem;
 import com.example.cart_service.service.CartService;
-import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RestController
 @RequestMapping("/api/carts")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class CartController {
 
     @Autowired
     private CartService cartService;
 
     @GetMapping
-    public ResponseEntity<CartResponse> getCart(HttpSession session) {
-        String userId = (String) session.getAttribute("USER_ID");
-        if (userId == null) {
+    public ResponseEntity<CartResponse> getCart(HttpServletRequest request) {
+        String cookie = request.getHeader("Cookie");
+        if (cookie == null) return ResponseEntity.status(401).build();
+
+        try {
+            CartResponse cart = cartService.getCartForCurrentUser(cookie);
+            return ResponseEntity.ok(cart);
+        } catch (Exception e) {
             return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok(cartService.getCartForUser(userId));
     }
 
     @PostMapping("/add")
-    public ResponseEntity<CartResponse> addToCart(@RequestBody CartItem item, HttpSession session) {
-        String userId = (String) session.getAttribute("USER_ID");
-        if (userId == null) {
+    public ResponseEntity<CartResponse> addToCart(@RequestBody CartItem item, HttpServletRequest request) {
+        String cookie = request.getHeader("Cookie");
+        if (cookie == null) return ResponseEntity.status(401).build();
+
+        try {
+            CartResponse updatedCart = cartService.addToCart(item, cookie);
+            return ResponseEntity.ok(updatedCart);
+        } catch (Exception e) {
             return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok(cartService.addToCart(userId, item));
     }
 
     @DeleteMapping("/remove/{productId}")
-    public ResponseEntity<CartResponse> removeFromCart(@PathVariable String productId, HttpSession session) {
-        String userId = (String) session.getAttribute("USER_ID");
-        if (userId == null) {
+    public ResponseEntity<CartResponse> removeFromCart(@PathVariable String productId, HttpServletRequest request) {
+        String cookie = request.getHeader("Cookie");
+        if (cookie == null) return ResponseEntity.status(401).build();
+
+        try {
+            CartResponse updatedCart = cartService.removeFromCart(productId, cookie);
+            return ResponseEntity.ok(updatedCart);
+        } catch (Exception e) {
             return ResponseEntity.status(401).build();
         }
-        return ResponseEntity.ok(cartService.removeFromCart(userId, productId));
     }
 
     @DeleteMapping("/clear")
-    public ResponseEntity<Void> clearCart(HttpSession session) {
-        String userId = (String) session.getAttribute("USER_ID");
-        if (userId == null) {
+    public ResponseEntity<Void> clearCart(HttpServletRequest request) {
+        String cookie = request.getHeader("Cookie");
+        if (cookie == null) return ResponseEntity.status(401).build();
+
+        try {
+            cartService.clearCart(cookie);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
             return ResponseEntity.status(401).build();
         }
-        cartService.clearCart(userId);
-        return ResponseEntity.noContent().build();
     }
 }
+

@@ -3,6 +3,8 @@ package com.example.user_profile_service.controller;
 import com.example.user_profile_service.DTO.LoginRequest;
 import com.example.user_profile_service.model.User;
 import com.example.user_profile_service.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -58,23 +60,58 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpSession session) {
+    public ResponseEntity<User> login(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+        // 🧹 Invalidate session cũ (nếu có)
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+
+        // 🆕 Tạo session mới
+        HttpSession newSession = request.getSession(true);
+
+        // Validate user credentials
         User user = userService.validateUser(loginRequest.getEmail(), loginRequest.getPassword());
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        System.out.println("User logged in with ID: " + user.getId());
-        session.setAttribute("USER_ID", user.getId());
+
+        // ✅ Lưu userId là String vào session
+        String userIdStr = user.getId().toString();
+        newSession.setAttribute("USER_ID", userIdStr);
+        System.out.println("User logged in with ID: " + userIdStr);
+
         return ResponseEntity.ok(user);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response) {
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            System.out.println("Session invalidated");
+        }
+
+        jakarta.servlet.http.Cookie cookie = new jakarta.servlet.http.Cookie("JSESSIONID", null);
+        cookie.setMaxAge(0);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(false);
+        response.addCookie(cookie);
+
+        return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/me")
     public ResponseEntity<User> getCurrentUser(HttpSession session) {
-        String userId = (String) session.getAttribute("USER_ID");
-        if (userId == null) {
+        String userIdStr = (String) session.getAttribute("USER_ID");
+
+        if (userIdStr == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-        User user = userService.getUserById(UUID.fromString(userId));
+
+        UUID userId = UUID.fromString(userIdStr);
+
+        User user = userService.getUserById(userId);
         return ResponseEntity.ok(user);
     }
 }

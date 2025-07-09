@@ -11,6 +11,27 @@ export const login = async(email, password) => {
     return await res.json();
 }
 
+export const fetchCurrentUser = async () => {
+  const res = await fetch(`${USER_API}/me`, {
+    credentials: "include", 
+  });
+
+  if (!res.ok) {
+    if (res.status === 401) return null; // session hết hạn
+    throw new Error("Lỗi khi kiểm tra phiên đăng nhập");
+  }
+
+  return res.json();
+};
+
+export const logout = async () => {
+  await fetch(`${USER_API}/logout`, {
+    method: "POST",
+    credentials: "include",
+  });
+  window.location.href = "/";
+};
+
 export const register = async (username, fullName, phone, email, password, address) => {
   const res = await fetch(`${USER_API}/register`, {
     method: "POST",
@@ -34,11 +55,6 @@ export const register = async (username, fullName, phone, email, password, addre
   return res.json();
 };
 
-export const getCurrentUser = () => {
-  const user = localStorage.getItem('user');
-  return user ? JSON.parse(user) : null;
-};
 
-export const getToken = () => localStorage.getItem();
 
-export const logout = () => localStorage.removeItem('token');
+

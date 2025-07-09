@@ -3,10 +3,11 @@ package com.example.cart_service.service;
 import com.example.cart_service.dto.CartResponse;
 import com.example.cart_service.model.Cart;
 import com.example.cart_service.model.CartItem;
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface CartService {
-    CartResponse getCartForUser(String userId);
-    CartResponse addToCart(String userId, CartItem item);
-    CartResponse removeFromCart(String userId, String productId);
-    void clearCart(String userId);
+    CartResponse getCartForCurrentUser(String cookie);
+    CartResponse addToCart(CartItem item, String cookie);
+    CartResponse removeFromCart(String productId, String cookie);
+    void clearCart(String cookie);
 }

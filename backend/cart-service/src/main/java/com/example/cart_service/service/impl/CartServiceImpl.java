@@ -1,14 +1,16 @@
 package com.example.cart_service.service.impl;
 
-
 import com.example.cart_service.client.ProductClient;
+import com.example.cart_service.client.UserClient;
 import com.example.cart_service.dto.CartItemResponse;
 import com.example.cart_service.dto.CartResponse;
 import com.example.cart_service.dto.ProductDTO;
+import com.example.cart_service.dto.User;
 import com.example.cart_service.model.Cart;
 import com.example.cart_service.model.CartItem;
 import com.example.cart_service.repository.CartRepository;
 import com.example.cart_service.service.CartService;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,32 +25,46 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ProductClient productClient;
 
-    @Override
-    public CartResponse getCartForUser(String userId) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElse(new Cart(null, userId, List.of()));
+    @Autowired
+    private UserClient userClient;
 
-        List<CartItemResponse> itemResponses = cart.getItems().stream().map(item -> {
-            ProductDTO product = productClient.getProductById(item.getProductId());
-            return CartItemResponse.builder()
-                    .productId(product.getId())
-                    .name(product.getName())
-                    .images(product.getImages())
-                    .salePrice(product.getSalePrice())
-                    .quantity(item.getQuantity())
-                    .build();
-        }).toList();
+    /**
+     * Lấy giỏ hàng cho user đang đăng nhập
+     */
+    @Override
+    public CartResponse getCartForCurrentUser(String cookie) {
+        System.out.println("Cookie from frontend: " + cookie);
+        User user = userClient.getCurrentUser(cookie);
+        UUID userId = user.getId();
+
+        Cart cart = cartRepository.findByUserId(userId.toString())
+                .orElseGet(() -> createNewCart(userId.toString()));
+
+        List<CartItemResponse> itemResponses = cart.getItems().stream()
+                .map(item -> {
+                    ProductDTO product = productClient.getProductById(item.getProductId());
+                    return CartItemResponse.builder()
+                            .productId(product.getId())
+                            .name(product.getName())
+                            .images(product.getImages())
+                            .salePrice(product.getSalePrice())
+                            .quantity(item.getQuantity())
+                            .build();
+                }).toList();
 
         return CartResponse.builder()
-                .userId(userId)
+                .userId(userId.toString())
                 .items(itemResponses)
                 .build();
     }
 
     @Override
-    public CartResponse addToCart(String userId, CartItem newItem) {
-        Cart cart = cartRepository.findByUserId(userId)
-                .orElse(new Cart(null, userId, List.of()));
+    public CartResponse addToCart(CartItem newItem, String cookie) {
+        User user = userClient.getCurrentUser(cookie);
+        UUID userId = user.getId();
+
+        Cart cart = cartRepository.findByUserId(userId.toString())
+                .orElseGet(() -> createNewCart(userId.toString()));
 
         Optional<CartItem> existingItemOpt = cart.getItems().stream()
                 .filter(item -> item.getProductId().equals(newItem.getProductId()))
@@ -62,27 +78,45 @@ public class CartServiceImpl implements CartService {
         }
 
         cartRepository.save(cart);
-        return getCartForUser(userId);
+        return getCartForCurrentUser(cookie);
     }
 
-
     @Override
-    public CartResponse removeFromCart(String userId, String productId) {
-        Cart cart = cartRepository.findByUserId(userId)
+    public CartResponse removeFromCart(String productId, String cookie) {
+        User user = userClient.getCurrentUser(cookie);
+        UUID userId = user.getId();
+
+        Cart cart = cartRepository.findByUserId(userId.toString())
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         cart.getItems().removeIf(item -> item.getProductId().equals(productId));
-
         cartRepository.save(cart);
-        return getCartForUser(userId);
+
+        return getCartForCurrentUser(cookie);
     }
 
+    /**
+     * Xoá toàn bộ giỏ hàng
+     */
     @Override
-    public void clearCart(String userId) {
-        Cart cart = cartRepository.findByUserId(userId)
+    public void clearCart(String cookie) {
+        User user = userClient.getCurrentUser(cookie);
+        UUID userId = user.getId();
+
+        Cart cart = cartRepository.findByUserId(userId.toString())
                 .orElseThrow(() -> new RuntimeException("Cart not found"));
 
         cart.getItems().clear();
         cartRepository.save(cart);
+    }
+
+    /**
+     * Helper: Tạo mới giỏ hàng
+     */
+    private Cart createNewCart(String userId) {
+        Cart cart = new Cart();
+        cart.setUserId(userId);
+        cart.setItems(new ArrayList<>());
+        return cartRepository.save(cart);
     }
 }

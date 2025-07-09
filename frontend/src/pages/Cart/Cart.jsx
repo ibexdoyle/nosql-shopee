@@ -1,51 +1,67 @@
-import React, {useState} from "react";
+import React, { useState } from "react";
 import Header from "../../components/Header/Header";
 import FormatNumber from "../../utils/FormatNumber";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useCart } from "../../context/CartContext";
-import { useUser } from '../../context/UserContext';
+import { useUser } from "../../context/UserContext";
 import { Divider, AppBar, Toolbar, Button, Typography, Box, Checkbox } from "@mui/material";
 
 const Cart = () => {
-  const { cartItems, updateQuantity, removeFromCart } = useCart();
+  const { cartItems, updateQuantity, removeItem } = useCart();
   const navigate = useNavigate();
   const [selectedItems, setSelectedItems] = useState([]);
-  const {user} = useUser();
-  if(!user){
-        return <Navigate to="/auth" replace/>
+  const { user } = useUser();
+
+  // 🔒 Nếu chưa login chuyển sang trang auth
+  if (!user) {
+    return <Navigate to="/auth" replace />;
   }
+
+  // ✅ Handler tăng/giảm số lượng
   const handleQuantityChange = (productId, delta) => {
     updateQuantity(productId, delta);
   };
 
+  // ✅ Handler xoá sản phẩm
   const handleRemoveItem = (productId) => {
-    removeFromCart(productId);
+    removeItem(productId);
+    setSelectedItems((prev) => prev.filter((id) => id !== productId));
   };
 
+  // ✅ Chọn 1 item
   const handleSelect = (productId) => {
-    setSelectedItems(prev =>
+    setSelectedItems((prev) =>
       prev.includes(productId)
-        ? prev.filter(id => id !== productId)
+        ? prev.filter((id) => id !== productId)
         : [...prev, productId]
     );
   };
 
+  // ✅ Chọn tất cả
   const handleSelectAll = () => {
-    const allIds = cartItems.map((item) => item.id);
+    const allIds = cartItems.map((item) => item.productId);
     const allSelected = allIds.every((id) => selectedItems.includes(id));
-
     setSelectedItems(allSelected ? [] : allIds);
   };
 
+  // ✅ Xoá những item đã chọn
+  const handleRemoveSelected = () => {
+    selectedItems.forEach((id) => removeItem(id));
+    setSelectedItems([]);
+  };
+
+  // ✅ Các sản phẩm đã chọn
   const selectedProducts = cartItems.filter((item) =>
-    selectedItems.includes(item.id)
+    selectedItems.includes(item.productId)
   );
 
+  // ✅ Tổng tiền
   const totalAmount = selectedProducts.reduce(
     (sum, item) => sum + item.salePrice * item.quantity,
     0
   );
 
+  // ✅ Group theo shop
   const groupedByShop = cartItems.reduce((acc, item) => {
     if (!acc[item.shopId]) {
       acc[item.shopId] = {
@@ -57,51 +73,62 @@ const Cart = () => {
     return acc;
   }, {});
 
+  // ✅ Hiển thị giỏ trống
   if (cartItems.length === 0) {
     return (
       <div>
         <Header />
         <div className="max-w-[1200px] mx-auto p-4 bg-white mt-4 rounded-md">
-          <h2 className="text-xl font-semibold mb-4"><i class="fi fi-sr-shopping-cart mr-3"></i>Giỏ hàng của bạn</h2>
+          <h2 className="text-xl font-semibold mb-4">
+            <i className="fi fi-sr-shopping-cart mr-3"></i>Giỏ hàng của bạn
+          </h2>
           <p>Không có sản phẩm nào trong giỏ hàng.</p>
         </div>
       </div>
     );
   }
 
-
   return (
     <div>
       <Header />
       <div className="max-w-[1200px] mx-auto p-4 bg-white mt-4 rounded-md">
-        <h2 className="text-xl font-semibold mb-4"><i class="fi fi-sr-shopping-cart mr-3"></i> Giỏ hàng của bạn</h2>
+        <h2 className="text-xl font-semibold mb-4">
+          <i className="fi fi-sr-shopping-cart mr-3"></i> Giỏ hàng của bạn
+        </h2>
 
         {Object.entries(groupedByShop).map(([shopId, shop]) => (
           <div key={shopId} className="border p-4 rounded mb-6">
             <h3 className="text-lg font-bold mb-3">{shop.shopName}</h3>
-            <Divider/>
-            {shop.items.map((product) => (
-              <div key={product.id} className="flex items-center gap-4 py-2 border-b last:border-b-0">
-                <input
-                  type="checkbox"
-                  checked={selectedItems.includes(product.id)}
-                  onChange={() => handleSelect(product.id)}
-                  className="mr-2"
+            <Divider />
+            {shop.items.map((item) => (
+              <div
+                key={item.productId}
+                className="flex items-center gap-4 py-2 border-b last:border-b-0"
+              >
+                <Checkbox
+                  checked={selectedItems.includes(item.productId)}
+                  onChange={() => handleSelect(item.productId)}
                 />
-                <img src={product.image} alt={product.name} className="w-20 h-20 object-cover rounded"/>
+                <img
+                  src={item.images?.[0] || "/default-image.jpg"}
+                  alt={item.name}
+                  className="w-20 h-20 object-cover rounded"
+                />
                 <div className="flex-1">
                   <h4 className="font-semibold line-clamp-2">
                     <Link
-                      to={`/product/${product.id}`}
+                      to={`/product/${item.productId}`}
                       className="hover:underline text-blue-500"
                     >
-                      {product.name}
+                      {item.name}
                     </Link>
                   </h4>
                   <div className="text-sm text-gray-600 mt-1">
-                    Địa chỉ: {product.address}
+                    Địa chỉ: {item.address}
                   </div>
-                  <button onClick={() => handleRemoveItem(product.id)} className="text-red-500 text-sm mt-1 hover:underline"
+                  <button
+                    onClick={() => handleRemoveItem(item.productId)}
+                    className="text-red-500 text-sm mt-1 hover:underline"
                   >
                     Xóa
                   </button>
@@ -109,20 +136,23 @@ const Cart = () => {
 
                 <div className="text-right min-w-[160px]">
                   <div className="text-red-500 font-bold text-lg">
-                    ₫{product.salePrice.toLocaleString("vi-VN")}
+                    ₫{item.salePrice.toLocaleString("vi-VN")}
                   </div>
                   <div className="flex items-center mt-1">
-                    <button onClick={() => handleQuantityChange(product.id, -1)} className="px-2 border">
+                    <button
+                      onClick={() => handleQuantityChange(item.productId, -1)}
+                      className="px-2 border"
+                    >
                       -
                     </button>
                     <input
                       type="number"
                       readOnly
-                      value={product.quantity}
+                      value={item.quantity}
                       className="w-12 text-center border-y"
                     />
                     <button
-                      onClick={() => handleQuantityChange(product.id, 1)}
+                      onClick={() => handleQuantityChange(item.productId, 1)}
                       className="px-2 border"
                     >
                       +
@@ -130,7 +160,7 @@ const Cart = () => {
                   </div>
                   <div className="text-sm text-gray-600 mt-1">
                     Tổng: ₫
-                    {(product.salePrice * product.quantity).toLocaleString("vi-VN")}
+                    {(item.salePrice * item.quantity).toLocaleString("vi-VN")}
                   </div>
                 </div>
               </div>
@@ -148,6 +178,8 @@ const Cart = () => {
           )}
         </div>
       </div>
+
+      {/* 🛒 Footer */}
       <AppBar
         position="fixed"
         color="default"
@@ -163,20 +195,20 @@ const Cart = () => {
         <Toolbar className="justify-between px-4">
           <Box className="flex items-center gap-2">
             <Checkbox
-              checked={selectedItems.length === cartItems.length && cartItems.length > 0}
+              checked={
+                selectedItems.length === cartItems.length &&
+                cartItems.length > 0
+              }
               onChange={handleSelectAll}
             />
             <Typography variant="body2">
               Chọn Tất Cả ({cartItems.length})
             </Typography>
             <Button
-              onClick={() =>
-                setSelectedItems((prev) =>
-                  prev.filter((item) => !selectedItems.includes(item.id))
-                )
-              }
+              onClick={handleRemoveSelected}
               size="small"
               color="error"
+              disabled={selectedItems.length === 0}
             >
               Xóa
             </Button>
@@ -191,11 +223,9 @@ const Cart = () => {
             </Typography>
             <button
               disabled={selectedItems.length === 0}
-              onClick={() => {
-                navigate('/checkout', {
-                  state: { products: selectedProducts },
-                });
-              }}
+              onClick={() =>
+                navigate("/checkout", { state: { products: selectedProducts } })
+              }
               className="bg-emerald-green hover:bg-mint text-white p-3 rounded-md"
             >
               Mua Hàng

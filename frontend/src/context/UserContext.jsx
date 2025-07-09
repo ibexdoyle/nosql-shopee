@@ -1,5 +1,9 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getCurrentUser, logout as doLogout, login as doLogin } from "../services/AuthService";
+import {
+  fetchCurrentUser,
+  login as apiLogin,
+  logout as apiLogout,
+} from "../services/AuthService";
 
 const UserContext = createContext({
   user: null,
@@ -11,26 +15,46 @@ const UserContext = createContext({
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  useEffect(() => {
-    const savedUser = JSON.parse(localStorage.getItem("user"));
-    if (savedUser) setUser(savedUser);
+    useEffect(() => {
+    const checkSession = async () => {
+      try {
+        const currentUser = await fetchCurrentUser();
+        if (currentUser) {
+          setUser(currentUser); // session hợp lệ
+        } else {
+          setUser(null); // session hết hạn
+        }
+      } catch (err) {
+        console.error("Không thể kiểm tra phiên đăng nhập:", err.message);
+        setUser(null);
+      }
+    };
+
+    checkSession();
   }, []);
 
   const login = async (email, password) => {
     try {
-      const res = await doLogin(email, password); 
-      setUser(res); 
-      localStorage.setItem("user", JSON.stringify(res));
+      const loggedInUser = await apiLogin(email, password);
+      setUser(loggedInUser);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+      const profile = await fetchCurrentUser();
+      setUser(profile);
     } catch (err) {
       throw new Error(err.message || "Đăng nhập thất bại");
     }
   };
 
-  const logout = () => {
-    doLogout(); 
-    setUser(null);
-    localStorage.removeItem("user");
+  const logout = async () => {
+    try {
+      await apiLogout();
+    } catch (err) {
+      console.error("Lỗi khi logout:", err.message);
+    } finally {
+      setUser(null);
+    }
   };
+
 
   return (
     <UserContext.Provider value={{ user, login, logout, setUser }}>

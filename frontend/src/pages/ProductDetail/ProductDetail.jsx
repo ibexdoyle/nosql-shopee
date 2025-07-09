@@ -68,21 +68,21 @@ const ProductDetail = () =>{
     };
 
     useEffect(() => {
-    const fetchProduct = async () => {
-        try {
-        const found = await fetchProductById(id); 
-        setProduct(found);
-        if (found?.images?.length > 0) {
-            setActiveImage(found.images[0]);
-        } else {
-            setActiveImage("https://via.placeholder.com/400x400?text=No+Image");
-        }
-        } catch (err) {
-        console.error("Không tìm thấy sản phẩm:", err);
-        }
-    };
+        const fetchProduct = async () => {
+            try {
+            const found = await fetchProductById(id); 
+            setProduct(found);
+            if (found?.images?.length > 0) {
+                setActiveImage(found.images[0]);
+            } else {
+                setActiveImage("https://via.placeholder.com/400x400?text=No+Image");
+            }
+            } catch (err) {
+            console.error("Không tìm thấy sản phẩm:", err);
+            }
+        };
 
-    fetchProduct();
+        fetchProduct();
     }, [id]);
 
     if (!product) return <p className="p-4 text-[2rem]">Không tìm thấy sản phẩm</p>;
