@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
@@ -13,4 +14,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class WalletChargedEvent {
     private UUID orderId;
+    private UUID userId;
+    private BigDecimal amount;
 }

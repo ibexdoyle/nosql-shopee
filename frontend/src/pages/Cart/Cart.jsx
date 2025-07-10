@@ -12,23 +12,19 @@ const Cart = () => {
   const [selectedItems, setSelectedItems] = useState([]);
   const { user } = useUser();
 
-  // 🔒 Nếu chưa login chuyển sang trang auth
   if (!user) {
     return <Navigate to="/auth" replace />;
   }
 
-  // ✅ Handler tăng/giảm số lượng
   const handleQuantityChange = (productId, delta) => {
     updateQuantity(productId, delta);
   };
 
-  // ✅ Handler xoá sản phẩm
   const handleRemoveItem = (productId) => {
     removeItem(productId);
     setSelectedItems((prev) => prev.filter((id) => id !== productId));
   };
 
-  // ✅ Chọn 1 item
   const handleSelect = (productId) => {
     setSelectedItems((prev) =>
       prev.includes(productId)
@@ -37,31 +33,26 @@ const Cart = () => {
     );
   };
 
-  // ✅ Chọn tất cả
   const handleSelectAll = () => {
     const allIds = cartItems.map((item) => item.productId);
     const allSelected = allIds.every((id) => selectedItems.includes(id));
     setSelectedItems(allSelected ? [] : allIds);
   };
 
-  // ✅ Xoá những item đã chọn
   const handleRemoveSelected = () => {
     selectedItems.forEach((id) => removeItem(id));
     setSelectedItems([]);
   };
 
-  // ✅ Các sản phẩm đã chọn
   const selectedProducts = cartItems.filter((item) =>
     selectedItems.includes(item.productId)
   );
 
-  // ✅ Tổng tiền
   const totalAmount = selectedProducts.reduce(
     (sum, item) => sum + item.salePrice * item.quantity,
     0
   );
 
-  // ✅ Group theo shop
   const groupedByShop = cartItems.reduce((acc, item) => {
     if (!acc[item.shopId]) {
       acc[item.shopId] = {
@@ -73,7 +64,6 @@ const Cart = () => {
     return acc;
   }, {});
 
-  // ✅ Hiển thị giỏ trống
   if (cartItems.length === 0) {
     return (
       <div>

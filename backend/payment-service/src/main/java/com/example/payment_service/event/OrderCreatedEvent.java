@@ -1,5 +1,7 @@
 package com.example.payment_service.event;
 
+import com.example.payment_service.config.CustomUUIDDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +16,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Builder
 public class OrderCreatedEvent {
+
     private UUID orderId;
     private UUID userId;
     private UUID shopId;
@@ -22,6 +25,7 @@ public class OrderCreatedEvent {
 
     @Data
     public static class OrderItem {
+        @JsonDeserialize(using = CustomUUIDDeserializer.class)
         private UUID productId;
         private int quantity;
     }

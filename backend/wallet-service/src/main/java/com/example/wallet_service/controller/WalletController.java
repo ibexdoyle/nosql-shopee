@@ -12,6 +12,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/wallets")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:3000")
 public class WalletController {
 
     private final WalletService walletService;

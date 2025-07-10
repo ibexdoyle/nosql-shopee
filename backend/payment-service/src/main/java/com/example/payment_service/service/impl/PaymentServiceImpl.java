@@ -93,7 +93,7 @@ public class PaymentServiceImpl implements PaymentService {
         WalletRefundEvent refund = WalletRefundEvent.builder()
                 .orderId(event.getOrderId())
                 .userId(event.getUserId())
-                .amount(event.getTotal())
+                .amount(event.getAmount())
                 .build();
 
         publisher.sendWalletRefund(refund);

@@ -5,14 +5,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaymentFailedEvent {
     private UUID orderId;
-//    private String reason;
+    private UUID userId;
+    private BigDecimal amount;
+    private String reason;
 }
 

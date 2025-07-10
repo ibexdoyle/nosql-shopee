@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Component;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -19,6 +22,7 @@ public class PaymentEventListener {
         log.info("[Kafkaaaaaaaaaa] Received OrderCreatedEvent for order {}", event.getOrderId());
         paymentService.handleOrderCreated(event);
     }
+
 
     @KafkaListener(topics = "wallet-charged-topic", groupId = "payment-service")
     public void onWalletCharged(WalletChargedEvent event) {

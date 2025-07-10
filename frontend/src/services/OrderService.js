@@ -1,4 +1,4 @@
-const ORDER_API = "http://localhost:8080/api/orders";
+const ORDER_API = "http://localhost:8088/api/orders";
 export const createOrder = async (orderData) => {
   const res = await fetch(ORDER_API, {
     method: "POST",

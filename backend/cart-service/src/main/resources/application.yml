@@ -5,7 +5,7 @@ spring:
     name: cart-service
   kafka:
     #CONFIGGG
-    bootstrap-servers: 10.0.110.5:9092
+    bootstrap-servers: 192.168.1.72:9092
     consumer:
       group-id: cart-service
       auto-offset-reset: earliest

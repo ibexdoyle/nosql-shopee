@@ -18,6 +18,4 @@ public interface PaymentService {
     void handleWalletFailed(WalletFailedEvent event);
     void handlePaymentRollback(PaymentRollbackEvent event);
     PaymentLog log(UUID txId, String message);
-
-
 }

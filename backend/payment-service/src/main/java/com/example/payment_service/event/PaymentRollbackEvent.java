@@ -10,11 +10,11 @@ import java.util.UUID;
 
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PaymentRollbackEvent {
     private UUID orderId;
     private UUID userId;
-    private BigDecimal total;
+    private BigDecimal amount;
 }
