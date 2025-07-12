@@ -9,13 +9,7 @@ import Coin from "../../assets/image/shortcut-coin.png"
 import categories from "./data/mock_home_category"
 import CountdownTimer from "../../utils/Countdown"
 import { sale_products } from "./data/mock_home_sale_product"
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
-import { NextArrow, PrevArrow } from "../../components/Arrows/Arrows"
-import PromoSection from "../../components/PromoSection/PromoSection"
-import {UndoRounded, GppGood, LocalShipping} from '@mui/icons-material'
-import {Banner} from
+
 
 
 const sliderSettings = {
