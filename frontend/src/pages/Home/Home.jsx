@@ -15,6 +15,7 @@ import Slider from "react-slick";
 import { NextArrow, PrevArrow } from "../../components/Arrows/Arrows"
 import PromoSection from "../../components/PromoSection/PromoSection"
 import {UndoRounded, GppGood, LocalShipping} from '@mui/icons-material'
+import {Banner} from
 
 
 const sliderSettings = {
